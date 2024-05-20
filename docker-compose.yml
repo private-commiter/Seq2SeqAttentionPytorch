@@ -1,0 +1,10 @@
+services:
+  s2s_main:
+    image: pytorch/pytorch:latest
+    deploy: # comment if No GPU available
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

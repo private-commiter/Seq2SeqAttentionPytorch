@@ -1,3 +1,4 @@
+import os
 import time
 
 import torch
@@ -7,6 +8,7 @@ import torch.optim as optim
 from ml.utils import show_plot, time_since
 from ml.encoder import EncoderRNN
 from ml.decoder_attentive import AttentiveDecoderRNN
+from ml.decoder import DecoderRNN
 from ml.dataloader import get_dataloader, Config
 
 
@@ -14,7 +16,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     config = Config(
-        data_dir='storage/data', batch_size=32,
+        data_dir='../storage/data', batch_size=256,#32,
         max_length=10, device=device,
         sos_token=0, eos_token=1
     )
@@ -28,7 +30,8 @@ def main():
     # quit()
 
     encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    decoder = AttentiveDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    # decoder = AttentiveDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    decoder = DecoderRNN(hidden_size, output_lang.n_words).to(device)
 
     train(train_dataloader, config, encoder, decoder, 80, 0.001, print_every=5, plot_every=5)
 

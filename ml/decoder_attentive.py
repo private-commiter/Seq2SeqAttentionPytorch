@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as nn_functional
+import torch.nn.functional as nn_func
 
 
 class BahdanauAttention(nn.Module):
@@ -14,7 +14,7 @@ class BahdanauAttention(nn.Module):
         scores = self.Va(torch.tanh(self.Wa(query) + self.Ua(keys)))
         scores = scores.squeeze(2).unsqueeze(1)
 
-        weights = nn_functional.softmax(scores, dim=-1)
+        weights = nn_func.softmax(scores, dim=-1)
         context = torch.bmm(weights, keys)
 
         return context, weights
@@ -64,7 +64,7 @@ class AttentiveDecoderRNN(nn.Module):
                 decoder_input = topi.squeeze(-1).detach()  # detach from history as input
 
         decoder_outputs = torch.cat(decoder_outputs, dim=1)
-        decoder_outputs = nn_functional.log_softmax(decoder_outputs, dim=-1)
+        decoder_outputs = nn_func.log_softmax(decoder_outputs, dim=-1)
         attentions = torch.cat(attentions, dim=1)
 
         return decoder_outputs, decoder_hidden, attentions

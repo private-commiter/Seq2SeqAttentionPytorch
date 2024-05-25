@@ -30,8 +30,8 @@ def main():
     # quit()
 
     encoder = EncoderRNN(input_lang.n_words, hidden_size).to(device)
-    # decoder = AttentiveDecoderRNN(hidden_size, output_lang.n_words).to(device)
-    decoder = DecoderRNN(hidden_size, output_lang.n_words).to(device)
+    decoder = AttentiveDecoderRNN(hidden_size, output_lang.n_words).to(device)
+    # decoder = DecoderRNN(hidden_size, output_lang.n_words).to(device)
 
     train(train_dataloader, config, encoder, decoder, 80, 0.001, print_every=5, plot_every=5)
 

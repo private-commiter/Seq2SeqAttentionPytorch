@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as nn_func
+import torch.nn.functional as nn_functional
 
 
 class DecoderRNN(nn.Module):
@@ -18,7 +18,7 @@ class DecoderRNN(nn.Module):
         decoder_outputs = []
 
         for i in range(max_length):
-            decoder_output, decoder_hidden = self.forward_step(decoder_input, decoder_hidden)
+            decoder_output, decoder_hidden, _  = self.forward_step(decoder_input, decoder_hidden)
             decoder_outputs.append(decoder_output)
 
             if target_tensor is not None:
@@ -30,12 +30,14 @@ class DecoderRNN(nn.Module):
                 decoder_input = topi.squeeze(-1).detach()  # detach from history as input
 
         decoder_outputs = torch.cat(decoder_outputs, dim=1)
-        decoder_outputs = nn_func.log_softmax(decoder_outputs, dim=-1)
-        return decoder_outputs, decoder_hidden, None # We return `None` for consistency in the training loop
+        decoder_outputs = F.log_softmax(decoder_outputs, dim=-1)
+
+        # return `None` for consistency in the training loop
+        return decoder_outputs, decoder_hidden, None
 
     def forward_step(self, input, hidden):
         output = self.embedding(input)
-        output = nn_func.relu(output)
+        output = F.relu(output)
         output, hidden = self.gru(output, hidden)
         output = self.out(output)
-        return output, hidden
+        return output, hidden, None

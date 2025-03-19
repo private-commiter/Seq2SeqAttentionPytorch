@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import torch
 from torch.utils.data import TensorDataset, DataLoader, RandomSampler
 
-from ml.dataloader_utils import TextPreprocessor
+from ml.data.dataloader_utils import TextPreprocessor
 
 
 @dataclass
@@ -34,7 +34,8 @@ def indexesFromSentence(lang, sentence):
 
 
 def get_dataloader(config: Config):
-    text_proc = TextPreprocessor(config.data_dir, config.max_length, config.sos_token, config.eos_token)
+    text_proc = TextPreprocessor(
+        config.data_dir, config.max_length, config.sos_token, config.eos_token)
     input_lang, output_lang, pairs \
         = text_proc.prepareData('eng', 'fra', True)
 
